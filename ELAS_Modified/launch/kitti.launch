@@ -1,0 +1,53 @@
+<launch>
+    <!-- Launches ELAS node, and rectification nodes for input --> 
+    <!-- Arguments: input stereo namespace and output elas namespace -->
+    <arg name="stereo" default="camera"/>
+    <arg name="elas_ns" default="elas"/>
+    
+
+    <!-- This node actually does the stereo reconstruction -->
+    <node name="$(arg elas_ns)" pkg="elas_ros" type="elas_ros" output="screen">
+        <remap from="stereo/left/image"        to="/camera/left/image_raw"/>
+        <remap from="stereo/left/camera_info"  to="/camera/left/camera_info"/>
+        <remap from="stereo/right/image"       to="/camera/right/image_raw"/>
+        <remap from="stereo/right/camera_info" to="/camera/right/camera_info"/>
+
+	<param name="point_cloud_frame_id" value="stereo_camera_frame"/>
+        <param name="disp_min" type="int" value="10"/>
+        <param name="disp_max" type="int" value="255"/>
+        <param name="support_threshold" type="double" value="0.95"/>
+        <param name="support_texture" type="int" value="10"/>
+        <param name="candidate_stepsize" type="int" value="5"/>
+        <param name="incon_window_size" type="int" value="5"/>
+        <param name="incon_threshold" type="int" value="5"/>
+        <param name="incon_min_support" type="int" value="5"/>
+        <param name="add_corners" type="bool" value="0"/>
+        <param name="grid_size" type="int" value="20"/>
+        <param name="beta" type="double" value="0.02"/>
+        <param name="gamma" type="double" value="3"/>
+        <param name="sigma" type="double" value="1"/>
+        <param name="sradius" type="double" value="2"/>
+        <param name="match_texture" type="int" value="1"/>
+        <param name="lr_threshold" type="int" value="2"/>
+        <param name="speckle_sim_threshold" type="double" value="1"/>
+        <param name="speckle_size" type="int" value="200"/>
+        <param name="ipol_gap_width" type="int" value="300"/>
+        <param name="filter_median" type="bool" value="0"/>
+        <param name="filter_adaptive_mean" type="bool" value="1"/>
+        <param name="postprocess_only_left" type="bool" value="1"/>
+        <param name="subsampling" type="bool" value="0"/>
+
+        <param name="approximate_sync" value="true" />
+        <param name="queue_size" type="int" value="5"/>
+        <!-- If your cameras are not synchronised then uncomment the following line -->
+        <!-- <param name="approximate_sync" value="true" type="bool"/> -->
+    </node>
+ 
+    <node pkg="tf" type="static_transform_publisher" name="map_to_cam"
+          args="0 0 1.5 0 0 0 map stereo_camera_frame 100"/>
+      
+    <node pkg="rviz" type="rviz" name="rviz" respawn="false" output="screen"
+          args="-d $(find pointcloud_mapping)/rviz/kittiWithOctomap.rviz">
+    </node>
+</launch>
+

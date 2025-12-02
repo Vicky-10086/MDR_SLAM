@@ -1,0 +1,12 @@
+build/
+devel/
+lib/
+bin/
+*.so
+*.a
+*.o
+*.log
+.vscode/
+.idea/
+*.bag
+*.pcd

@@ -1,0 +1,80 @@
+%YAML:1.0
+
+#--------------------------------------------------------------------------------------------
+# Camera Parameters. Adjust them!
+#--------------------------------------------------------------------------------------------
+
+# Camera.type: "PinHole" (ORB-SLAM2 默认模型)
+
+# 【核心修改 1】相机内参
+# 这里必须填入 CameraInfo 中 P 矩阵 (Projection Matrix) 的值
+# P = [fx'  0  cx' Tx]
+#     [ 0  fy' cy' Ty]
+#     [ 0   0   1   0]
+Camera.fx: 627.45250382
+Camera.fy: 627.45250382
+Camera.cx: 674.54638672
+Camera.cy: 338.56169891
+
+# 【核心修改 2】畸变系数
+# 必须全为 0，因为我们订阅的是 /image_rect_color (已去畸变图像)
+Camera.k1: 0.0
+Camera.k2: 0.0
+Camera.p1: 0.0
+Camera.p2: 0.0
+Camera.k3: 0.0
+
+Camera.width: 1280
+Camera.height: 720
+
+# Camera frames per second 
+# ZED 默认通常是 15, 30 或 60。NUFR 数据集一般为 30 FPS。
+Camera.fps: 30.0
+
+# 【核心修改 3】双目基线参数 bf
+# bf = baseline (meters) * fx (pixels)
+# ZED 2i 基线约 0.12m。 0.12 * 627.45 ≈ 75.3
+# 这里使用您提供的 P 矩阵第4列绝对值，非常准确。
+Camera.bf: 75.34114210
+
+# Color order of the images (0: BGR, 1: RGB). It is ignored if images are grayscale.
+# ROS 的 image_rect_color 通常是 RGB 顺序
+Camera.RGB: 1
+
+# ThDepth: Close/Far threshold. Close points are inserted from 1 view.
+# Far points are inserted as in the monocular case from 2 views.
+# 建议值: 35 ~ 50 倍的基线。 35 * 0.12m = 4.2m。
+# 意味着 4.2 米以外的点被视为“远点”（单目三角化），以提高精度。
+ThDepth: 35
+
+#--------------------------------------------------------------------------------------------
+# ORB Parameters
+#--------------------------------------------------------------------------------------------
+
+# ORB Extractor: Number of features per image
+ORBextractor.nFeatures: 2000
+
+# ORB Extractor: Scale factor between levels in the scale pyramid 	
+ORBextractor.scaleFactor: 1.2
+
+# ORB Extractor: Number of levels in the scale pyramid	
+ORBextractor.nLevels: 8
+
+# ORB Extractor: Fast threshold
+# Image is divided in a grid. At each cell FAST are detected throwing an orientation.
+ORBextractor.iniThFAST: 20
+ORBextractor.minThFAST: 7
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters
+#--------------------------------------------------------------------------------------------
+Viewer.KeyFrameSize: 0.05
+Viewer.KeyFrameLineWidth: 1
+Viewer.GraphLineWidth: 0.9
+Viewer.PointSize: 2
+Viewer.CameraSize: 0.08
+Viewer.CameraLineWidth: 3
+Viewer.ViewpointX: 0
+Viewer.ViewpointY: -0.7
+Viewer.ViewpointZ: -1.8
+Viewer.ViewpointF: 500
