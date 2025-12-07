@@ -1,0 +1,17 @@
+# 忽略所有数据文件夹
+data/
+output_data/
+dense/
+sparse/
+
+# 忽略所有中间过程文件和大模型文件
+*.bag
+*.ply
+*.pcd
+*.mvs
+*.dmp
+*.log
+
+# 忽略系统文件
+__pycache__/
+.DS_Store
